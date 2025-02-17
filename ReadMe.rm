@@ -1,0 +1,14 @@
+To Run:
+
+Install Docker
+Install Python
+Install Flask : pip install flask flask-cors
+
+clone this repo
+
+"cd truesemobk"
+
+"docker build -t truesemobk ."
+
+"docker run -p 5000:5000 truesemobk"
+
