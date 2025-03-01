@@ -16,7 +16,7 @@
 - **Generate a Secret Key in Python REPL and add it to .env:**
   ```python
   import secrets
-  print(secrets.token_hex(16))
+  print(secrets.token_hex(32))
 
 - **Add the generated key to your .env file:**
   ```env
