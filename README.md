@@ -28,7 +28,7 @@
 
 ## Expected File Tree Layout
   ```sh
-  /flask_project
+  /backend
 │── /templates
 │   ├── home.html
 │   ├── register.html
