@@ -25,3 +25,14 @@
 - **Run the app.py file:**
   ```sh
   python app.py
+
+## Expected File Tree Layout
+  ```sh
+  /flask_project
+│── /templates
+│   ├── home.html
+│   ├── register.html
+│   ├── login.html
+│── app.py
+│── .env
+│── README.md
