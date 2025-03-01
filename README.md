@@ -27,7 +27,7 @@
   python app.py
 
 ## Expected File Tree Layout
-  ```sh
+  ```
   /backend
 │── /templates
 │   ├── home.html
