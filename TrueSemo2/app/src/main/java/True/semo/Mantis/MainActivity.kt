@@ -1,25 +1,24 @@
 package True.semo.Mantis
+import True.semo.Mantis.LoginScreen
+import True.semo.Mantis.SignUpScreen
+import True.semo.Mantis.MainScreen
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import True.semo.Mantis.ui.theme.TrueSemoTheme
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,53 +28,52 @@ class MainActivity : ComponentActivity() {
             TrueSemoTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = Color.Gray
+                    color = MaterialTheme.colorScheme.background
                 ) {
-                    Column {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(Color.Red),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = "True Semo",
-                                color = Color.White,
-                                style = MaterialTheme.typography.headlineMedium,
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier.padding(vertical = 16.dp)
+                    val navController = rememberNavController()
+                    val authViewModel: AuthViewModel = viewModel()
+                    val context = LocalContext.current
+                    val auth = Firebase.auth
+
+                    NavHost(navController = navController, startDestination = "login") {
+                        composable("login") {
+                            LoginScreen(
+                                onLoginClick = { email, password ->
+                                    authViewModel.login(email, password) { success ->
+                                        if (success) {
+                                            // Navigate to the main screen
+                                            Toast.makeText(context, "Login Successful", Toast.LENGTH_SHORT).show()
+                                            navController.navigate("main")
+                                        } else {
+                                            // Show an error message
+                                            Toast.makeText(context, "Login Failed", Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
+                                },
+                                onNavigateToSignUp = { navController.navigate("signUp") }
                             )
                         }
+                        composable("signUp") {
+                            SignUpScreen(
+                                onSignUpClick = { email, password ->
+                                    authViewModel.signUp(email, password) { success ->
+                                        if (success) {
+                                            // Navigate to the main screen or login screen
+                                            Toast.makeText(context, "Account Created", Toast.LENGTH_SHORT).show()
+                                            navController.navigate("login")
+                                        } else {
+                                            // Show an error message
+                                            Toast.makeText(context, "Account Creation Failed", Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
+                                },
+                                onNavigateToLogin = { navController.navigate("login") }
+                            )
+                        }
+                        composable("main"){
+                            MainScreen()
+                        }
                     }
-                }
-            }
-        }
-    }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    TrueSemoTheme{
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = Color.Gray
-        ) {
-            Column {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color.Red),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "True Semo",
-                        color = Color.White,
-                        style = MaterialTheme.typography.headlineMedium,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(vertical = 16.dp)
-                    )
                 }
             }
         }
