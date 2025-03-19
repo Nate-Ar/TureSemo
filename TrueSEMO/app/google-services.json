@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "597641867895",
+    "project_id": "true-semo",
+    "storage_bucket": "true-semo.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:597641867895:android:96a2ecd8faaab239914c72",
+        "android_client_info": {
+          "package_name": "True.semo.mantis"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPW3XhMLSvl36XXU7LedJXKHwJckeLYY4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:597641867895:android:9a53db19fcc97cc0914c72",
+        "android_client_info": {
+          "package_name": "semo.true.prayingMantis"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPW3XhMLSvl36XXU7LedJXKHwJckeLYY4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
