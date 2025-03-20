@@ -1,4 +1,5 @@
 package True.semo.Mantis
+
 import True.semo.Mantis.LoginScreen
 import True.semo.Mantis.SignUpScreen
 import True.semo.Mantis.MainScreen
@@ -36,16 +37,18 @@ class MainActivity : ComponentActivity() {
                     val auth = Firebase.auth
 
                     NavHost(navController = navController, startDestination = "login") {
+                        // Login Screen
                         composable("login") {
                             LoginScreen(
                                 onLoginClick = { email, password ->
                                     authViewModel.login(email, password) { success ->
                                         if (success) {
-                                            // Navigate to the main screen
+                                            // Navigate to main screen after login
                                             Toast.makeText(context, "Login Successful", Toast.LENGTH_SHORT).show()
-                                            navController.navigate("main")
+                                            navController.navigate("main") {
+                                                popUpTo("login") { inclusive = true }
+                                            }
                                         } else {
-                                            // Show an error message
                                             Toast.makeText(context, "Login Failed", Toast.LENGTH_SHORT).show()
                                         }
                                     }
@@ -53,25 +56,25 @@ class MainActivity : ComponentActivity() {
                                 onNavigateToSignUp = { navController.navigate("signUp") }
                             )
                         }
+
+                        // Sign-Up Screen
                         composable("signUp") {
                             SignUpScreen(
-                                onSignUpClick = { email, password ->
-                                    authViewModel.signUp(email, password) { success ->
-                                        if (success) {
-                                            // Navigate to the main screen or login screen
-                                            Toast.makeText(context, "Account Created", Toast.LENGTH_SHORT).show()
-                                            navController.navigate("login")
-                                        } else {
-                                            // Show an error message
-                                            Toast.makeText(context, "Account Creation Failed", Toast.LENGTH_SHORT).show()
-                                        }
-                                    }
-                                },
                                 onNavigateToLogin = { navController.navigate("login") }
                             )
                         }
-                        composable("main"){
-                            MainScreen()
+
+                        // Main Screen with Logout Handling
+                        composable("main") {
+                            MainScreen(
+                                onLogout = {
+                                    auth.signOut() // Sign out the user
+                                    navController.navigate("login") {
+                                        popUpTo("main") { inclusive = true } // Clear backstack
+                                    }
+                                    Toast.makeText(context, "Logged Out", Toast.LENGTH_SHORT).show()
+                                }
+                            )
                         }
                     }
                 }

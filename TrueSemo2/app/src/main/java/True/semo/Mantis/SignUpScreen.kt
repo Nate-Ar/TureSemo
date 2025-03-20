@@ -14,12 +14,12 @@ import com.google.firebase.database.FirebaseDatabase
 
 @Composable
 fun SignUpScreen(
-    onSignUpClick: (String, String) -> Unit,
     onNavigateToLogin: () -> Unit
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf<String?>(null) }
+    var successMessage by remember { mutableStateOf<String?>(null) }
 
     val auth = FirebaseAuth.getInstance()  // Firebase Authentication instance
     val database: DatabaseReference = FirebaseDatabase.getInstance().reference  // Firebase Realtime Database reference
@@ -43,15 +43,22 @@ fun SignUpScreen(
                             database.child("users").child(userId).setValue(userData)
                                 .addOnSuccessListener {
                                     Log.d("SignUp", "User data saved to Realtime Database")
-                                    onSignUpClick(email, password) // Call the function passed from parent
+                                    // Clear any previous error message
+                                    errorMessage = null
+                                    successMessage = "Account created successfully!"
+                                    // Optionally, you can navigate to the login screen or main screen
                                 }
                                 .addOnFailureListener { e ->
                                     Log.w("SignUp", "Error saving user data", e)
-                                    errorMessage = "Failed to save user data"
+                                    // Only show the error message if saving fails
+                                    successMessage = null
+                                    errorMessage = "Failed to save user data: ${e.message}"
                                 }
                         }
                     } else {
-                        errorMessage = task.exception?.localizedMessage
+                        // Only set the error message if the account creation failed
+                        successMessage = null
+                        errorMessage = task.exception?.localizedMessage ?: "Unknown error"
                     }
                 }
         } else {
@@ -87,6 +94,10 @@ fun SignUpScreen(
         errorMessage?.let {
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = it, color = MaterialTheme.colorScheme.error)
+        }
+        successMessage?.let {
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = it, color = MaterialTheme.colorScheme.primary)
         }
         Spacer(modifier = Modifier.height(8.dp))
         TextButton(onClick = onNavigateToLogin) {
